@@ -146,6 +146,7 @@ if [[ -n "$DISPLAY" || "$XDG_SESSION_TYPE" == "wayland" ]]; then
             fastfetch --logo-type none \
                       --title-color-user 91 \
                       --color-keys 96
+        fi
     else
         # User fastfetch
         if [[ -f "$HOME/Pictures/Logos/debian.png" ]]; then
