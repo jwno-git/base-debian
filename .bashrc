@@ -5,28 +5,22 @@ if [[ $EUID -eq 0 ]]; then
     # Root prompt: red
     PS1=' \[\033[90m\]\w \[\033[91m\]root \[\033[91m\]>\[\033[0m\] '
 else
-    # User prompt: green
-    PS1=' \[\033[90m\]\w \[\033[92m\]>\[\033[0m\] '
+    # User prompt: cyan
+    PS1=' \[\033[90m\]\w \[\033[36m\]>\[\033[0m\] '
 fi
 
 # Path configuration
 export PATH="$HOME/.local/scripts:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 # Environment variables
 export EDITOR="vim"
 export VISUAL="vim"
-export GTK_THEME=Tokyonight-Dark
-export XDG_CURRENT_DESKTOP=sway
-export XDG_SESSION_DESKTOP=sway
-export XDG_DATA_DIRS="$HOME/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share"
 
 # Common aliases
-alias ps='ps aux'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-alias -- -='cd -'
-alias ll='ls -al'
 
 # User-specific functions (only for regular user, not root)
 if [[ $EUID -ne 0 ]]; then
@@ -39,10 +33,6 @@ if [[ $EUID -ne 0 ]]; then
     }
 
     # Shell Commands
-    ii() {
-        eog "$@" > /dev/null 2>&1 &
-    }
-
     # Services Monitor
     service_status() {
         echo "=== FAILED SERVICES (Critical!) ==="
@@ -73,35 +63,41 @@ if [[ -n "$DISPLAY" || "$XDG_SESSION_TYPE" == "wayland" ]]; then
     # In GUI terminal
     if [[ $EUID -eq 0 ]]; then
         # Root fastfetch
-        fastfetch --logo-type none --title-color-user 31
+        if [[ -f "$HOME/Pictures/Logos/debianroot.png" ]]; then
+        fastfetch --logo-type chafa \
+                  --logo "$HOME/Pictures/Logos/debianroot.png" \
+                  --logo-height 12 \
+                  --logo-width 22 \
+                  --logo-padding-left 4 \
+                  --logo-padding-top 2 \
+                  --title-color-user 91 \
+        else
+            # Fallback if logo doesn't exist
+            fastfetch --logo-type none \
+                      --title-color-user 91 \
     else
-        # User fastfetch with NixOS logo
-        if [[ -f "$HOME/Pictures/Logos/nixoslogo.png" ]]; then
-            fastfetch --logo-type sixel \
-                      --logo "$HOME/Pictures/Logos/nixoslogo.png" \
+        # User fastfetch
+        if [[ -f "$HOME/Pictures/Logos/debian.png" ]]; then
+            fastfetch --logo-type chafa \
+                      --logo "$HOME/Pictures/Logos/debian.png" \
                       --logo-height 12 \
                       --logo-width 22 \
                       --logo-padding-left 4 \
                       --logo-padding-top 2 \
-                      --title-color-user 36 \
-                      --color-keys magenta \
-                      --title-color-host magenta
+                      --title-color-user 96 \
         else
             # Fallback if logo doesn't exist
             fastfetch --logo-type none \
-                      --title-color-user 36 \
-                      --color-keys magenta \
-                      --title-color-host magenta
+                      --title-color-user 96 \
         fi
     fi
 else
     # In TTY
     if [[ $EUID -eq 0 ]]; then
         fastfetch --logo-type none \
-                  --color-keys magenta \
-                  --title-color-user 36 \
-                  --title-color-host magenta
+                  --title-color-user 91
     else
-        fastfetch --logo-type none --title-color-user 36
+        fastfetch --logo-type none \
+                  --title-color-user 96
     fi
 fi
