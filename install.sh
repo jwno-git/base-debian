@@ -2,6 +2,10 @@ set -e
 
 read -p "Press Enter to continue..."
 
+echo "Acquiring packages for building"
+
+sudo apt install -y git build-essential gawk sed
+
 # #######################################################################################
 # STEP 1: MOVE CONFIGURATION FILES
 # #######################################################################################
@@ -19,8 +23,9 @@ sudo cp $HOME/.vimrc /root/
 sudo cp -r $HOME/.config /root/
 sudo install -D $HOME/Pictures/Logos/debianroot.png /root/Pictures/Logos/debianroot.png
 
-wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo gpg --dearmor -o /usr/share/keyrings/google-chrome-keyring.gpg
-echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+# Install BLE (Bash Completion/Verification)
+git clone --recursive https://github.com/akinomyoga/ble.sh.git ~/.local/src/ble.sh
+make -C ~/.local/src/ble.sh install PREFIX=~/.local
 
 sudo apt update
 sudo apt modernize-sources -y
@@ -164,186 +169,31 @@ echo "=== STEP 3: Installing packages ==="
 
 echo "Installing main packages..."
 sudo apt install -y \
-  bluez \
-  brightnessctl \
   btop \
-  chafa \
-  cliphist \
   curl \
-  dunst \
   fastfetch \
   fbset \
-  firefox-esr-l10n-en-ca \
-  flatpak \
-  fonts-font-awesome \
   fonts-terminus \
-  gimp \
-  google-chrome-stable \
-  grim \
-  imagemagick \
-  jq \
   lf \
-  libsixel-bin \
-  libsixel-dev \
-  libsixel1 \
-  lxpolkit \
   network-manager \
-  network-manager-applet \
   nftables \
   openssh-client \
-  pavucontrol \
-  pipewire \
-  pipewire-pulse \
-  pipewire-audio \
-  pipewire-alsa \
   pkexec \
   psmisc \
-  slurp \
-  sway \
-  swaybg \
-  swappy \
   tar \
   tlp \
   tlp-rdw \
   unzip \
   vim \
-  waybar \
-  wireplumber \
-  wf-recorder \
   wget \
-  wlogout \
-  wofi \
-  xdg-desktop-portal-wlr \
-  xwayland \
   zip
-
-echo "Installing development packages (reduced set for hyprpicker only)..."
-sudo apt install -y --no-install-recommends \
-  build-essential \
-  cmake \
-  g++ \
-  libcairo2-dev \
-  libdrm-dev \
-  libfuse2t64 \
-  libgbm-dev \
-  libgl1-mesa-dev \
-  libinput-dev \
-  libjpeg-dev \
-  libmagic-dev \
-  libpango1.0-dev \
-  libpugixml-dev \
-  libspa-0.2-bluetooth \
-  libwayland-dev \
-  libwebp-dev \
-  libxkbcommon-dev \
-  make \
-  mpv \
-  ninja-build \
-  pkg-config \
-  wayland-protocols
 
   sudo ldconfig
 
 sleep 2
 
 # #######################################################################################
-# STEP 4: INSTALL FLATPAK APPLICATIONS & JOPLIN
-# #######################################################################################
-
-echo ""
-echo "=== STEP 4: Installing Flatpak applications ==="
-
-flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo
-
-echo "Installing Flatpak applications..."
-flatpak install -y --user flathub \
-	org.kde.kdenlive \
-	org.libreoffice.LibreOffice \
-	org.gnome.eog \
-	com.bitwarden.desktop \
-	org.gnome.Calculator
-
-echo "Configuring Flatpak overrides..."
-flatpak override --user \
-	--filesystem=xdg-config/gtk-3.0 \
-	--filesystem=xdg-config/gtk-4.0 \
-	--filesystem=/usr/share/themes:ro \
-	--filesystem=/usr/share/icons:ro \
-	--filesystem=home/.themes:ro \
-	--filesystem=home/.icons:ro \
-	--env=GTK_THEME=Tokyonight-Dark \
-	--env=XCURSOR_THEME=RosePine \
-	--env=XCURSOR_SIZE=32 \
-	--socket=wayland \
-	--talk-name=org.freedesktop.portal.Desktop
-
-flatpak override --user org.kde.kdenlive \
-  	--filesystem=home \
-  	--env=QT_QPA_PLATFORM=wayland
-
-flatpak override --user org.gnome.eog \
-  	--filesystem=home
-
-flatpak override --user org.libreoffice.Libreoffice \
-	--filesystem=home
-
-sleep 2
-
-wget -O - https://raw.githubusercontent.com/laurent22/joplin/dev/Joplin_install_and_update.sh | bash
-
-# #######################################################################################
-# STEP 5: BUILD HYPR COMPONENTS FROM SOURCE (REDUCED SET)
-# #######################################################################################
-
-echo ""
-echo "=== STEP 5: Building Hypr components from source (hyprpicker only) ==="
-
-cd $HOME/
-mkdir -p $HOME/.src
-
-echo "Cloning repositories..."
-git clone https://github.com/hyprwm/hyprutils $HOME/.src/hyprutils
-git clone https://github.com/hyprwm/hyprlang $HOME/.src/hyprlang
-git clone https://github.com/hyprwm/hyprwayland-scanner $HOME/.src/hyprwayland-scanner
-git clone https://github.com/hyprwm/hyprgraphics $HOME/.src/hyprgraphics
-git clone https://github.com/hyprwm/hyprpicker $HOME/.src/hyprpicker
-
-echo "Building Hyprutils..."
-cd $HOME/.src/hyprutils/
-cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
-cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
-sudo cmake --install build
-
-echo "Building Hyprlang..."
-cd $HOME/.src/hyprlang/
-cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
-cmake --build ./build --config Release --target hyprlang -j`nproc 2>/dev/null || getconf _NPROCESSORS_CONF`
-sudo cmake --install ./build
-
-echo "Building Hyprwayland-Scanner..."
-cd $HOME/.src/hyprwayland-scanner/
-cmake -DCMAKE_INSTALL_PREFIX=/usr -B build
-cmake --build build -j `nproc`
-sudo cmake --install build
-
-echo "Building Hyprgraphics..."
-cd $HOME/.src/hyprgraphics/
-cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
-cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
-sudo cmake --install build
-
-echo "Building Hyprpicker..."
-cd $HOME/.src/hyprpicker/
-cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
-cmake --build ./build --config Release --target hyprpicker -j`nproc 2>/dev/null || getconf _NPROCESSORS_CONF`
-sudo cmake --install ./build
-
-cd $HOME/
-
-sleep 2
-
-# #######################################################################################
-# STEP 6: INSTALL SYSTEMD-BOOT
+# STEP 4: INSTALL SYSTEMD-BOOT
 # #######################################################################################
 
 echo ""
@@ -381,63 +231,14 @@ sudo efibootmgr -b "$BOOT_ID" -B
 sleep 2
 
 # #######################################################################################
-# STEP 7: SET UP THEMES AND ICONS
-# #######################################################################################
-
-echo ""
-echo "=== STEP 7: Setting up themes and icons ==="
-
-echo "Extracting theme archives..."
-cd $HOME/.icons/
-tar -xf BreezeX-RosePine-Linux.tar.xz
-mv BreezeX-RosePine-Linux RosePine
-
-cd $HOME/.themes/
-tar -xf Tokyonight-Dark.tar.xz
-
-echo "Installing themes system-wide..."
-sudo cp -r $HOME/.icons/RosePine /usr/share/icons/
-sudo cp -r $HOME/.themes/Tokyonight-Dark /usr/share/themes/
-
-echo "Setting up root user configuration..."
-sudo mkdir -p /root/.src
-sudo mv $HOME/.root/.config /root/
-sudo mv $HOME/.root/.vimrc /root/
-sudo mv $HOME/.root/debianroot.png /root/
-sudo mv $HOME/.root/tlp.conf /etc/
-
-echo "Making scripts executable..."
-sudo chmod +x $HOME/.local/scripts/toggle_record.sh
-sudo chmod +x $HOME/.local/scripts/toggle_term.sh
-sudo chmod +x $HOME/.local/scripts/help_desk.sh
-sudo chmod +x $HOME/.local/scripts/vim-term.sh
-sudo chmod +x $HOME/.local/scripts/wofi-ssh.sh
-
-sleep 2
-
-# #######################################################################################
-# STEP 8: CONFIGURE SYSTEM SERVICES
+# STEP 5: CONFIGURE SYSTEM SERVICES
 # #######################################################################################
 
 echo ""
 echo "=== STEP 8: Configuring system services ==="
 
-echo "Creating Bluetooth desktop entry..."
-cat > $HOME/.local/share/applications/bluetoothctl.desktop << 'EOF'
-[Desktop Entry]
-Name=Bluetooth
-Comment=Command-line Bluetooth manager
-Exec=bash -c '/usr/bin/pkexec systemctl start bluetooth && footclient --app-id=bluetooth --title="Bluetooth Control" bluetoothctl'
-Icon=bluetooth
-Terminal=false
-Type=Application
-Categories=System;Settings;
-StartupNotify=true
-EOF
-
 echo "Configuring NetworkManager..."
 sudo sed -i 's/managed=false/managed=true/g' /etc/NetworkManager/NetworkManager.conf
-sudo sed -i 's/Adwaita/RosePine/g' /usr/share/icons/default/index.theme
 sudo rm -rf /etc/motd
 
 echo "Setting up network interfaces..."
@@ -453,16 +254,13 @@ iface lo inet loopback
 EOF
 
 echo "Cleaning up and enabling services..."
-rm -rf $HOME/.root
+rm -rf $HOME/base-debian
 sudo systemctl enable NetworkManager
-systemctl --user enable pipewire
-systemctl --user enable pipewire-pulse  
-systemctl --user enable wireplumber
 
 sleep 2
 
 # #######################################################################################
-# STEP 9: SET UP NFTABLES FIREWALL
+# STEP 6: SET UP NFTABLES FIREWALL
 # #######################################################################################
 
 echo ""
