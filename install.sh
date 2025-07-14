@@ -20,12 +20,12 @@ mv $HOME/base-debian/.vimrc $HOME/
 mv $HOME/base-debian/.bashrc $HOME/
 sudo cp $HOME/.bashrc /root/
 sudo cp $HOME/.vimrc /root/
-sudo cp -r $HOME/.config /root/
+sudo install -D $HOME/base-debian/.root/.config/fastfetch/config.jsonc /root/.config/fastfetch/config.jsonc
 sudo install -D $HOME/Pictures/Logos/debianroot.png /root/Pictures/Logos/debianroot.png
 
 # Install BLE (Bash Completion/Verification)
 git clone --recursive https://github.com/akinomyoga/ble.sh.git ~/.local/src/ble.sh
-make -C ~/.local/src/ble.sh install PREFIX=~/.local
+sudo make -C ~/.local/src/ble.sh install PREFIX=/usr/local
 
 sudo apt update
 sudo apt modernize-sources -y
@@ -254,7 +254,6 @@ iface lo inet loopback
 EOF
 
 echo "Cleaning up and enabling services..."
-rm -rf $HOME/base-debian
 sudo systemctl enable NetworkManager
 
 sleep 2
