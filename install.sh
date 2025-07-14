@@ -4,7 +4,7 @@ read -p "Press Enter to continue..."
 
 echo "Acquiring packages for building"
 
-sudo apt install -y build-essential gawk sed
+sudo apt install build-essential gawk
 
 # #######################################################################################
 # STEP 1: MOVE CONFIGURATION FILES
