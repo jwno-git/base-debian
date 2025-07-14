@@ -14,7 +14,7 @@ fi
 # Prompt - using standard ANSI colors for better compatibility
 if [[ $EUID -eq 0 ]]; then
     # Root prompt: red
-    PS1=' \[\033[90m\]\w \[\033[91m\]root \[\033[91m\]>\[\033[0m\] '
+    PS1=' \[\033[90m\]\w \[\033[91m\]root \[\033[36m\]>\[\033[0m\] '
 else
     # User prompt: cyan
     PS1=' \[\033[90m\]\w \[\033[36m\]>\[\033[0m\] '
