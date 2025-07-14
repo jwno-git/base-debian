@@ -5,7 +5,7 @@
   // Title
      {
       "type": "title",
-      "format": "{#36}╭ {#96}{user-name} {#36}──────────"
+      "format": "{#36}╭ {user-name} {#36}──────────"
     },
     {
       "type": "host",
