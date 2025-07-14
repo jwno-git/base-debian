@@ -1,5 +1,16 @@
 # Bash Config
 
+# BLE Completion/Command Verification
+# Only load in interactive shells
+if [[ $- == *i* ]]; then
+    # Load ble.sh from different locations for root vs regular user
+    if [[ $EUID -eq 0 ]]; then
+        [[ -f /root/.local/share/blesh/ble.sh ]] && source /root/.local/share/blesh/ble.sh
+    else
+        [[ -f "$HOME/.local/share/blesh/ble.sh" ]] && source "$HOME/.local/share/blesh/ble.sh"
+    fi
+fi
+
 # Prompt - using standard ANSI colors for better compatibility
 if [[ $EUID -eq 0 ]]; then
     # Root prompt: red
@@ -44,6 +55,64 @@ if [[ $EUID -ne 0 ]]; then
         echo -e "\n=== INACTIVE SERVICES ==="
         systemctl list-units --type=service --state=inactive --no-pager
         echo "... (showing first 10 inactive services)"
+    }
+
+    # Custom snapshot with description
+    snap() {
+        if [ -z "$1" ]; then 
+            echo "Usage: snap <description>"
+            echo "Example: snap BaseInstall"
+            return 1
+        fi
+        sudo btrfs subvolume snapshot / "/.snapshots/$1" && \
+        echo "✓ Created snapshot: $1"
+    }
+
+    # List snapshots using native btrfs command
+    snapl() {
+        sudo btrfs subvolume list /.snapshots
+    }
+
+    # Remove snapshot
+    snaprm() {
+        if [ -z "$1" ]; then
+            echo "Usage: snaprm <snapshot_name>"
+            echo "Available snapshots:"
+            sudo find /.snapshots -maxdepth 1 -type d -printf "  %f\n" | grep -v "^  $"
+            return 1
+        fi
+        if [ ! -d "/.snapshots/$1" ]; then
+            echo "Error: Snapshot '$1' does not exist"
+            return 1
+        fi
+        echo "Removing snapshot: $1"
+        sudo btrfs subvolume delete "/.snapshots/$1" && \
+        echo "✓ Removed snapshot: $1"
+    }
+
+    # Show snapshot disk usage
+    snapdu() {
+        echo "=== Snapshot Disk Usage ==="
+        if [ -n "$1" ]; then
+            # Show usage for specific snapshot
+            echo "Usage for snapshot: $1"
+            sudo du -sh "/.snapshots/$1" 2>/dev/null || \
+            echo "Snapshot '$1' not found"
+        else
+            # Show usage for all snapshots
+            echo "Individual snapshot sizes:"
+            sudo find /.snapshots -maxdepth 1 -type d -name "*" | \
+            while read -r dir; do
+                if [ "$dir" != "/.snapshots" ]; then
+                    local name=$(basename "$dir")
+                    local size=$(sudo du -sh "$dir" 2>/dev/null | cut -f1)
+                    printf "  %-20s %s\n" "$name" "$size"
+                fi
+            done
+            echo ""
+            echo "Total snapshots directory size:"
+            sudo du -sh /.snapshots
+        fi
     }
 fi
 
@@ -106,4 +175,13 @@ else
                   --title-color-user 97 \
                   --color-keys 96
     fi
+fi
+
+# BLE color configuration
+if [[ ${BLE_VERSION-} ]]; then
+    ble-color-setface command_function "fg=92"
+    ble-color-setface command_builtin "fg=92"
+    ble-color-setface command_alias "fg=92"
+    ble-color-setface command_file "fg=92"
+    ble-color-setface syntax_error "fg=31"
 fi
