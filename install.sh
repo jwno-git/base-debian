@@ -18,6 +18,7 @@ mv $HOME/base-debian/.config $HOME/
 mv $HOME/base-debian/Pictures $HOME/
 mv $HOME/base-debian/.vimrc $HOME/
 mv $HOME/base-debian/.bashrc $HOME/
+sudo mv $HOME/base-debian/tlp.conf /etc/
 sudo cp $HOME/.bashrc /root/
 sudo cp $HOME/.vimrc /root/
 sudo cp -r $HOME/.config /root/
