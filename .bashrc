@@ -1,16 +1,5 @@
 # Bash Config
 
-# BLE Completion/Command Verification
-# Only load in interactive shells
-if [[ $- == *i* ]]; then
-    # Load ble.sh from different locations for root vs regular user
-    if [[ $EUID -eq 0 ]]; then
-        [[ -f /root/.local/share/blesh/ble.sh ]] && source /root/.local/share/blesh/ble.sh
-    else
-        [[ -f "$HOME/.local/share/blesh/ble.sh" ]] && source "$HOME/.local/share/blesh/ble.sh"
-    fi
-fi
-
 # Prompt - using standard ANSI colors for better compatibility
 if [[ $EUID -eq 0 ]]; then
     # Root prompt: red
@@ -138,14 +127,10 @@ if [[ -n "$DISPLAY" || "$XDG_SESSION_TYPE" == "wayland" ]]; then
                   --logo-height 12 \
                   --logo-width 22 \
                   --logo-padding-left 4 \
-                  --logo-padding-top 2 \
-                  --title-color-user 91 \
-                  --color-keys 96
+                  --logo-padding-top 2 
         else
             # Fallback if logo doesn't exist
-            fastfetch --logo-type none \
-                      --title-color-user 91 \
-                      --color-keys 96
+            fastfetch --logo-type none 
         fi
     else
         # User fastfetch
@@ -155,34 +140,30 @@ if [[ -n "$DISPLAY" || "$XDG_SESSION_TYPE" == "wayland" ]]; then
                       --logo-height 12 \
                       --logo-width 22 \
                       --logo-padding-left 4 \
-                      --logo-padding-top 2 \
-                      --title-color-user 97 \
-                      --color-keys 96
+                      --logo-padding-top 2
         else
             # Fallback if logo doesn't exist
-            fastfetch --logo-type none \
-                      --title-color-user 97 \
-                      --color-keys 96
+            fastfetch --logo-type none 
         fi
     fi
 else
     # In TTY
     if [[ $EUID -eq 0 ]]; then
-        fastfetch --logo-type none \
-                  --title-color-user 91 \
-                  --color-keys 96
-    else
-        fastfetch --logo-type none \
-                  --title-color-user 97 \
-                  --color-keys 96
+        fastfetch --logo-type none 
     fi
+fi
+
+# BLE Completion/Command Verification
+# Only load in interactive shells
+if [[ $- == *i* ]]; then
+    [[ -f /usr/local/share/blesh/ble.sh ]] && source /usr/local/share/blesh/ble.sh
 fi
 
 # BLE color configuration
 if [[ ${BLE_VERSION-} ]]; then
-    ble-color-setface command_function "fg=92"
-    ble-color-setface command_builtin "fg=92"
-    ble-color-setface command_alias "fg=92"
-    ble-color-setface command_file "fg=92"
+    ble-color-setface command_function "fg=32"
+    ble-color-setface command_builtin "fg=32"
+    ble-color-setface command_alias "fg=32"
+    ble-color-setface command_file "fg=32"
     ble-color-setface syntax_error "fg=31"
 fi
