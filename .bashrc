@@ -71,10 +71,12 @@ if [[ -n "$DISPLAY" || "$XDG_SESSION_TYPE" == "wayland" ]]; then
                   --logo-padding-left 4 \
                   --logo-padding-top 2 \
                   --title-color-user 91 \
+                  --color-keys 96
         else
             # Fallback if logo doesn't exist
             fastfetch --logo-type none \
                       --title-color-user 91 \
+                      --color-keys 96
     else
         # User fastfetch
         if [[ -f "$HOME/Pictures/Logos/debian.png" ]]; then
@@ -84,20 +86,24 @@ if [[ -n "$DISPLAY" || "$XDG_SESSION_TYPE" == "wayland" ]]; then
                       --logo-width 22 \
                       --logo-padding-left 4 \
                       --logo-padding-top 2 \
-                      --title-color-user 96 \
+                      --title-color-user 97 \
+                      --color-keys 96
         else
             # Fallback if logo doesn't exist
             fastfetch --logo-type none \
-                      --title-color-user 96 \
+                      --title-color-user 97 \
+                      --color-keys 96
         fi
     fi
 else
     # In TTY
     if [[ $EUID -eq 0 ]]; then
         fastfetch --logo-type none \
-                  --title-color-user 91
+                  --title-color-user 91 \
+                  --color-keys 96
     else
         fastfetch --logo-type none \
-                  --title-color-user 96
+                  --title-color-user 97 \
+                  --color-keys 96
     fi
 fi
