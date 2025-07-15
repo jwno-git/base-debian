@@ -4,7 +4,7 @@ read -p "Press Enter to continue..."
 
 echo "Acquiring packages for building"
 
-sudo apt install build-essential gawk gpg
+sudo apt install build-essential gawk gpg wget curl
 
 # #######################################################################################
 # STEP 1: MOVE CONFIGURATION FILES
@@ -178,7 +178,6 @@ sudo apt install -y \
   btop \
   chafa \
   cliphist \
-  curl \
   dunst \
   fastfetch \
   fbset \
@@ -207,7 +206,6 @@ sudo apt install -y \
   tlp-rdw \
   unzip \
   vim \
-  wget \
   zip
 
   sudo ldconfig
