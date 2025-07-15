@@ -187,6 +187,7 @@ sudo apt install -y \
   fonts-terminus \
   gimp \
   google-chrome-stable \
+  kitty \
   lf \
   lxpolkit \
   network-manager \
@@ -200,7 +201,6 @@ sudo apt install -y \
   pipewire-alsa \
   pkexec \
   psmisc \
-  stterm \
   tar \
   tlp \
   tlp-rdw \
