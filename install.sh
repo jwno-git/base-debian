@@ -18,7 +18,9 @@ mv $HOME/base-debian/.config $HOME/
 mv $HOME/base-debian/Pictures $HOME/
 mv $HOME/base-debian/.vimrc $HOME/
 mv $HOME/base-debian/.bashrc $HOME/
+mv $HOME/base-debian/.blerc $HOME/
 sudo cp $HOME/.bashrc /root/
+sudo cp $HOME/.blerc /root/
 sudo cp $HOME/.vimrc /root/
 sudo install -D $HOME/base-debian/.root/.config/fastfetch/config.jsonc /root/.config/fastfetch/config.jsonc
 sudo install -D $HOME/Pictures/Logos/debianroot.png /root/Pictures/Logos/debianroot.png
@@ -187,7 +189,6 @@ sudo apt install -y \
   fonts-terminus \
   gimp \
   google-chrome-stable \
-  kitty \
   lf \
   lxpolkit \
   network-manager \
@@ -202,6 +203,7 @@ sudo apt install -y \
   pkexec \
   psmisc \
   tar \
+  terminator \
   tlp \
   tlp-rdw \
   unzip \
