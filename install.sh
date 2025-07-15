@@ -4,7 +4,7 @@ read -p "Press Enter to continue..."
 
 echo "Acquiring packages for building"
 
-sudo apt install build-essential gawk
+sudo apt install build-essential gawk gpg
 
 # #######################################################################################
 # STEP 1: MOVE CONFIGURATION FILES
@@ -26,6 +26,10 @@ sudo install -D $HOME/Pictures/Logos/debianroot.png /root/Pictures/Logos/debianr
 # Install BLE (Bash Completion/Verification)
 git clone --recursive https://github.com/akinomyoga/ble.sh.git ~/.local/src/ble.sh
 sudo make -C ~/.local/src/ble.sh install PREFIX=/usr/local
+
+# Adding Google Chrome Repo
+wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo gpg --dearmor -o /usr/share/keyrings/google-chrome-keyring.gpg
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
 
 sudo apt update
 sudo apt modernize-sources -y
@@ -169,17 +173,35 @@ echo "=== STEP 3: Installing packages ==="
 
 echo "Installing main packages..."
 sudo apt install -y \
+  bluez \
+  brightnessctl \
   btop \
+  chafa \
+  cliphist \
   curl \
+  dunst \
   fastfetch \
   fbset \
+  feh \
+  firefox-esr-l10n-en-ca \
+  flameshot \
   fonts-terminus \
+  gimp \
+  google-chrome-stable \
   lf \
+  lxpolkit \
   network-manager \
+  network-manager-applet \
   nftables \
   openssh-client \
+  pavucontrol \
+  pipewire \
+  pipewire-pulse \
+  pipewire-audio \
+  pipewire-alsa \
   pkexec \
   psmisc \
+  stterm \
   tar \
   tlp \
   tlp-rdw \
