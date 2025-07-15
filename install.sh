@@ -196,6 +196,7 @@ sudo apt install -y \
   nftables \
   openssh-client \
   pavucontrol \
+  picom \
   pipewire \
   pipewire-pulse \
   pipewire-audio \
