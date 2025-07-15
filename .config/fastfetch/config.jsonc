@@ -5,65 +5,65 @@
   // Title
      {
       "type": "title",
-      "format": "{#36}╭ {user-name} {#36}──────────"
+      "format": "{#95}╭ {#97}{user-name} {#95}──────────"
     },
     {
       "type": "host",
-      "key": "{#36}│ {#keys}Host"
+      "key": "{#95}│ {#36}{#keys}Host"
     },
     {
       "type": "kernel",
-      "key": "{#36}│ {#keys}Kernel"
+      "key": "{#95}│ {#36}{#keys}Kernel"
     },
     {
       "type": "os",
-      "key": "{#36}│ {#keys}Os"
+      "key": "{#95}│ {#36}{#keys}Os"
     },
     {
       "type": "title",
-      "format": "{#36}╰──────────────────────────"
+      "format": "{#95}╰──────────────────────────"
     },
      {
       "type": "title",
-      "format": "{#36}╭──────────────────────────"
+      "format": "{#95}╭──────────────────────────"
     },   
     {
       "type": "packages",
-      "key": "{#36}│ {#keys}Packages"
+      "key": "{#95}│ {#36}{#keys}Packages"
     },
     {
       "type": "disk",
-      "key": "{#36}│ {#keys}Disk"
+      "key": "{#95}│ {#36}{#keys}Disk"
     },
     {
       "type": "cpu",
-      "key": "{#36}│ {#keys}CPU",
+      "key": "{#95}│ {#36}{#keys}CPU",
       "temp": true
     },
     {
       "type": "cpuusage",
-      "key": "{#36}│ {#keys}Cpuusage"
+      "key": "{#95}│ {#36}{#keys}Cpuusage"
     },
     {
       "type": "gpu",
-      "key": "{#36}│ {#keys}GPU",
+      "key": "{#95}│ {#36}{#keys}GPU",
       "temp": true
     },
 //    {
 //      "type": "processes",
-//      "key": "{#36}│ {#keys}Processes"
+//      "key": "{#95}│ {#36}{#keys}Processes"
 //    },
     {
       "type": "swap",
-      "key": "{#36}│ {#keys}Swap"
+      "key": "{#95}│ {#36}{#keys}Swap"
     },
     {
       "type": "memory",
-      "key": "{#36}│ {#keys}Memory"
+      "key": "{#95}│ {#36}{#keys}Memory"
     },
     {
       "type": "title",
-      "format": "{#36}╰───────────────────────────────────────────"
+      "format": "{#95}╰───────────────────────────────────────────"
     },
     "break"
   ]
